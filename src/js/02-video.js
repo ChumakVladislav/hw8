@@ -12,7 +12,7 @@ const player = new Player(iframe);
 const onPlay = function (data) {
   localStorage.setItem('videoplayer-current-time', data.seconds);
 };
-
+//Добавляєм бібліотеку
 var throttle = require('lodash.throttle');
 const lodashOnPlay = throttle(onPlay, [(wait = 1000)]);
 
