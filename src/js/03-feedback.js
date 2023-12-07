@@ -1,36 +1,31 @@
-import throttle from 'lodash.throttle';
-// Доступи до елементів форми
 const refForm = document.querySelector('.feedback-form');
 const refInput = document.querySelector('input');
 const remMessage = document.querySelector('textarea');
 
-// Зберігаємо данні в поля
+import throttle from 'lodash.throttle';
+const LOCAL_DATE = 'feedback-form-state';
+// refForm.addEventListener('submit', onFormSumbit);
+refForm.addEventListener('input', throttle(onFormInput, 500));
 
-var throttle = require('lodash.throttle');
-throttledFormInput = throttle(formInput, [(wait = 500)]);
-refForm.addEventListener('input', throttledFormInput);
 const clientMessage = {};
 
-function formInput(evt) {
-  clientMessage.email = evt.currentTarget.elements.email.value;
-  clientMessage.message = evt.currentTarget.elements.message.value;
-  localStorage.setItem('feedback-form-state', JSON.stringify(clientMessage));
+function onFormInput(e) {
+  clientMessage[e.target.name] = e.target.value;
+  localStorage.setItem(LOCAL_DATE, JSON.stringify(clientMessage));
 }
 
-// Перевіряємо чи є данні і заповнюємо поля
+const clientDate = JSON.parse(localStorage.getItem(LOCAL_DATE));
 
-if (JSON.parse(localStorage.getItem('feedback-form-state'))) {
-  const formValue = JSON.parse(localStorage.getItem('feedback-form-state'));
-  refInput.value = formValue.email;
-  remMessage.value = formValue.message;
+if (localStorage.getItem(LOCAL_DATE)) {
+  refInput.value = clientDate.email;
+  remMessage.value = clientDate.message;
 }
-// Під час сабміту форми очищуй сховище і поля форми,
-// а також виводь у консоль об'єкт з полями email, message та їхніми поточними значеннями.
 
-refForm.addEventListener('submit', formSubmit);
+refForm.addEventListener('submit', onFormSubmit);
 
-function formSubmit(evt) {
-  evt.preventDefault();
-  console.log(JSON.parse(localStorage.getItem('feedback-form-state')));
+function onFormSubmit(e) {
+  e.preventDefault();
+  console.log(JSON.parse(localStorage.getItem(LOCAL_DATE)));
   refForm.reset();
+  localStorage.removeItem(LOCAL_DATE);
 }

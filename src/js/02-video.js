@@ -13,7 +13,7 @@ const onPlay = function (data) {
 };
 //Добавляєм бібліотеку
 var throttle = require('lodash.throttle');
-const lodashOnPlay = throttle(onPlay, [(wait = 1000)]);
+const lodashOnPlay = throttle(onPlay, 1000);
 
 player.on('timeupdate', lodashOnPlay);
 
